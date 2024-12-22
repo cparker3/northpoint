@@ -1,0 +1,33 @@
+{
+    "zara.com": {
+        "Emma_Brown": 1
+    },
+    "tesla.com": {
+        "Jack.Cooper": 1,
+        "Single.Name": 1
+    },
+    "marriott.com": {
+        "joseph.joufrane": 4,
+        "brianna.price": 4
+    },
+    "nike.com": {
+        "alessandra.marder": 4,
+        "cheyenne.ware": 4,
+        "kelsey.thompson": 3
+    },
+    "exxonmobil.com": {
+        "andrew": 4
+    },
+    "salesforce.com": {
+        "j.smith": 4
+    },
+    "workday.com": {
+        "S.B": 1,
+        "paula.gonzalez": 4,
+        "Sabrina.B": 3
+    },
+    "coca-cola.com": {
+        "SChapman": 1,
+        "nperez": 1
+    }
+}
