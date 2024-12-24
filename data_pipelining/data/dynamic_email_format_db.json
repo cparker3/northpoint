@@ -1,33 +1,31 @@
 {
-    "zara.com": {
-        "Emma_Brown": 1
-    },
-    "tesla.com": {
-        "Jack.Cooper": 1,
-        "Single.Name": 1
-    },
     "marriott.com": {
-        "joseph.joufrane": 4,
-        "brianna.price": 4
-    },
-    "nike.com": {
-        "alessandra.marder": 4,
-        "cheyenne.ware": 4,
-        "kelsey.thompson": 3
-    },
-    "exxonmobil.com": {
-        "andrew": 4
+        "first": 4
     },
     "salesforce.com": {
-        "j.smith": 4
+        "firstInitial.last": 2
+    },
+    "nike.com": {
+        "first.last": 6
+    },
+    "exxonmobil.com": {
+        "first": 2
     },
     "workday.com": {
-        "S.B": 1,
-        "paula.gonzalez": 4,
-        "Sabrina.B": 3
+        "first.last": 2
     },
     "coca-cola.com": {
-        "SChapman": 1,
-        "nperez": 1
+        "customPattern:{first[0]}{last}": 2
+    },
+    "_catchall_domains": {
+        "paypal.com": true,
+        "uber.com": true,
+        "netflix.com": true,
+        "costco.com": true,
+        "target.com": true,
+        "fox.com": true,
+        "airbnb.com": true,
+        "spotify.com": true,
+        "walmart.com": true
     }
 }

@@ -3,6 +3,13 @@ import json
 import requests
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
+
+# Set the OpenAI API key
+mv_api_key = os.getenv("MILLION_VERIFIER_API_KEY")
 
 # -----------------------------------------------------
 # File paths
@@ -70,7 +77,7 @@ def save_dynamic_db(db, debug=False):
 # -----------------------------------------------------
 # MillionVerifier
 # -----------------------------------------------------
-def verify_email_millionverifier(email, api_key="Zi1Q7CYUTEznhotJ0ImUpICyG", retries=3, debug=False):
+def verify_email_millionverifier(email, api_key=mv_api_key, retries=3, debug=False):
     for attempt in range(retries):
         try:
             if debug:
