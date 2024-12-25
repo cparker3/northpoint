@@ -1,21 +1,21 @@
 {
     "marriott.com": {
-        "first": 4
+        "first": 20
     },
     "salesforce.com": {
-        "firstInitial.last": 2
+        "firstInitial.last": 10
     },
     "nike.com": {
-        "first.last": 6
+        "first.last": 30
     },
     "exxonmobil.com": {
-        "first": 2
+        "first": 10
     },
     "workday.com": {
-        "first.last": 2
+        "first.last": 10
     },
     "coca-cola.com": {
-        "customPattern:{first[0]}{last}": 2
+        "customPattern:{first[0]}{last}": 10
     },
     "_catchall_domains": {
         "paypal.com": true,

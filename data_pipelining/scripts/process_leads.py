@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import argparse
 
 # -----------------------------------------------------
 # External Utils (imported from elsewhere)
@@ -112,6 +113,7 @@ def guess_email(row, email_formats, debug=False):
 # -----------------------------------------------------
 def process_all_leads(
     input_folder, 
+    single_file_name,
     output_folder, 
     merged_output_file=None, 
     debug=False
@@ -156,6 +158,12 @@ def process_all_leads(
             if debug:
                 print(f"[DEBUG] Skipping temporary file: {file_name}")
             continue
+        
+        if file_name != single_file_name:
+            if debug:
+                print(f"[DEBUG] Skipping '{file_name}' since only '{single_file_name}' was specified.")
+            continue
+
 
         if file_name.endswith(".xlsx") and file_name not in processed_files:
             input_file = os.path.join(input_folder, file_name)
@@ -222,9 +230,37 @@ def process_all_leads(
 # Main Function
 # -----------------------------------------------------
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process leads from an input Excel file.")
+    parser.add_argument(
+        "--input_file",
+        type=str,
+        default="../input/test_leads.xlsx",
+        help="Path to the input Excel file."
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug mode."
+    )
+    args = parser.parse_args()
+
+    # We'll derive the folder from whichever file was passed in
+    # so that process_all_leads only processes that one file
+    input_folder = os.path.dirname(args.input_file)
+    single_file_name = os.path.basename(args.input_file)
+
+    print(f"Processing leads from file: {args.input_file}")
+
+    # IMPORTANT: We'll call 'process_all_leads' but skip everything not matching 'single_file_name'.
+    # That way, it won't pick up other xlsx files from input_folder.
+    # If you truly only want to handle the SINGLE file passed in, add a quick check in the for-loop inside 'process_all_leads'.
+    # We'll do that by passing the folder, but keep in mind we only want `single_file_name`.
+    # If you'd like to adapt 'process_all_leads' to accept a single-file path, you can do so too.
+
     process_all_leads(
-        input_folder,
-        output_folder,
-        merged_output_file,
-        debug=False
+        input_folder=input_folder,
+        single_file_name=single_file_name,
+        output_folder=output_folder,
+        merged_output_file=merged_output_file,
+        debug=args.debug
     )

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Pipeline Web App</title>
+  <!-- Link to our external CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  <!-- Optionally include a Google Font and FontAwesome for icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://kit.fontawesome.com/bb7f345a5c.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <i class="fas fa-database"></i> Data Pipeline
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Welcome to Your Data Pipeline</h1>
+    <p class="intro-text">
+      Upload your Excel file, process it, and download the transformed result in just three simple steps.
+    </p>
+
+    <!-- Form Section -->
+    <form id="upload-form" class="upload-form">
+      <div class="form-group">
+        <label for="file" class="label"
+          ><i class="fas fa-file-excel"></i> Choose Excel File:</label
+        >
+        <input
+          type="file"
+          id="file"
+          name="file"
+          accept=".xlsx"
+          required
+          class="file-input"
+        />
+      </div>
+      <button type="submit" class="btn upload-btn">
+        <i class="fas fa-upload"></i> Upload &amp; Process
+      </button>
+    </form>
+
+    <!-- Progress & Logs -->
+    <div class="progress-panel">
+      <div id="progress" class="progress-log"></div>
+      <!-- We’ll show a spinner during uploading/processing -->
+      <div class="spinner" id="spinner" style="display: none;"></div>
+    </div>
+
+    <!-- Download Button -->
+    <div id="download" class="download-section" style="display: none;">
+      <a
+        id="download-link"
+        href=""
+        download
+        class="btn download-btn"
+      >
+        <i class="fas fa-download"></i> Download Processed File
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2024 Northpoint Data Solutions</p>
+  </footer>
+
+  <!-- Main JS Logic (unchanged) -->
+  <script>
+    const form = document.getElementById('upload-form');
+    const progressDiv = document.getElementById('progress');
+    const downloadDiv = document.getElementById('download');
+    const downloadLink = document.getElementById('download-link');
+    const spinner = document.getElementById('spinner');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById('file');
+      if (!fileInput.files.length) {
+        alert('Please select a file.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      // Step 1: Upload the file
+      spinner.style.display = 'block';
+      progressDiv.textContent = 'Uploading file...';
+      const uploadResponse = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const uploadData = await uploadResponse.json();
+      if (!uploadResponse.ok) {
+        spinner.style.display = 'none';
+        progressDiv.textContent = `Upload failed: ${uploadData.error}`;
+        return;
+      }
+      const jobId = uploadData.job_id;
+      progressDiv.textContent = 'File uploaded. Starting processing...';
+
+      // Step 2: Start processing
+      await fetch('/process', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: jobId })
+      });
+
+      // Step 3: Poll for progress
+      const checkProgress = async () => {
+        const progressResponse = await fetch(`/progress?job_id=${jobId}`);
+        const progressData = await progressResponse.json();
+        progressDiv.textContent = progressData.logs.join('\n');
+
+        // If pipeline is done, update UI
+        if (progressData.logs.includes('Pipeline completed!')) {
+          spinner.style.display = 'none';
+          downloadLink.href = `/download?job_id=${jobId}`;
+          downloadDiv.style.display = 'block';
+          progressDiv.textContent += '\nProcessing complete. Download your file below.';
+          return;
+        }
+        setTimeout(checkProgress, 2000);
+      };
+      checkProgress();
+    });
+  </script>
+</body>
+</html>

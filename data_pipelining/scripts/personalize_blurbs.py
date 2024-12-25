@@ -3,6 +3,8 @@ import logging
 import openai
 import pandas as pd
 import time
+import argparse
+
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
@@ -55,6 +57,8 @@ def generate_blurb(role, company, first_name):
     - The recipient's first name is {first_name}.
     - Their role is {role}.
     - The company they work for is {company}.
+
+    Make sure what you return is ONLY the blurb. This will then be transferred over to fit seamlessly into the rest of the email. ONLY include the Blurb and NOTHING before or after it. 
 
     Email Context:
     
@@ -151,8 +155,29 @@ def generate_customs(input_file, output_file, debug=False):
 
 # Example usage
 if __name__ == "__main__":
-    generate_customs(
-        input_file="../output/validated_test_leads.xlsx",
-        output_file="../output/blurbed_and_classified_leads.xlsx",
-        debug=False  # Set to False to reduce logging
+    parser = argparse.ArgumentParser(description="Generate personalized blurbs for leads.")
+    parser.add_argument(
+        "--input_file",
+        type=str,
+        default="../output/validated_test_leads.xlsx",
+        help="Path to validated leads Excel file."
     )
+    parser.add_argument(
+        "--output_file",
+        type=str,
+        default="../output/blurbed_and_classified_leads.xlsx",
+        help="Path to save blurbed and classified leads."
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug mode."
+    )
+    args = parser.parse_args()
+
+    generate_customs(
+        input_file=args.input_file,
+        output_file=args.output_file,
+        debug=args.debug
+    )
+

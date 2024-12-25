@@ -2,6 +2,8 @@ import os
 import json
 import requests
 import pandas as pd
+import argparse
+
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
@@ -419,9 +421,36 @@ def validate_leads(input_file, output_file_all, output_file_valid, debug=False):
 # Main function
 # -----------------------------------------------------
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Validate leads using MillionVerifier.")
+    parser.add_argument(
+        "--input_file",
+        type=str,
+        default="../output/processed_test_leads.xlsx",
+        help="Path to the processed leads Excel file."
+    )
+    parser.add_argument(
+        "--output_file_all",
+        type=str,
+        default="../output/pro_processed_test_leads.xlsx",
+        help="Path to save the full validated leads."
+    )
+    parser.add_argument(
+        "--output_file_valid",
+        type=str,
+        default="../output/validated_test_leads.xlsx",
+        help="Path to save valid/catch-all leads."
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug mode."
+    )
+
+    args = parser.parse_args()
+
     validate_leads(
-        input_file="../output/processed_test_leads.xlsx",
-        output_file_all="../output/pro_processed_test_leads.xlsx",
-        output_file_valid="../output/validated_test_leads.xlsx",
-        debug=False
+        input_file=args.input_file,
+        output_file_all=args.output_file_all,
+        output_file_valid=args.output_file_valid,
+        debug=args.debug
     )
